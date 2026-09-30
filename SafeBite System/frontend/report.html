@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Report a Concern | SafeBite</title>
+
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/public.css">
+</head>
+
+<body>
+
+<header class="header">
+
+    <a href="index.html" class="logo">
+        <span class="logo-mark">S</span>
+
+        <span>
+            <strong>SafeBite</strong>
+            <small>Food safety reporting</small>
+        </span>
+    </a>
+
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="report.html" class="active">Report an issue</a>
+        <a href="track.html">Track report</a>
+    </nav>
+
+</header>
+
+
+<main class="report-container">
+
+    <div class="report-intro">
+
+        <p class="eyebrow">REPORT A CONCERN</p>
+
+        <h1>Tell us what happened.</h1>
+
+        <p>
+            Give us the details you remember. You don't need
+            to know what caused the problem.
+        </p>
+
+    </div>
+
+
+    <form id="complaintForm" class="report-form">
+
+        <!-- STEP 1 -->
+
+        <section class="form-section">
+
+            <div class="section-number">01</div>
+
+            <div class="section-content">
+
+                <h2>What happened?</h2>
+
+                <p class="section-help">
+                    Describe your experience in your own words.
+                </p>
+
+                <label for="description">
+                    Your description
+                </label>
+
+                <textarea
+                    id="description"
+                    rows="6"
+                    required
+                    placeholder="Example: I ordered chicken biryani and later noticed..."
+                ></textarea>
+
+            </div>
+
+        </section>
+
+
+        <!-- STEP 2 -->
+
+        <section class="form-section">
+
+            <div class="section-number">02</div>
+
+            <div class="section-content">
+
+                <h2>Where did the food come from?</h2>
+
+                <p class="section-help">
+                    This helps the reviewing team identify the source.
+                </p>
+
+
+                <div class="form-grid">
+
+                    <div class="field">
+
+                        <label for="business_name">
+                            Restaurant / business
+                        </label>
+
+                        <input
+                            id="business_name"
+                            type="text"
+                            required
+                            placeholder="Example: ABC Restaurant"
+                        >
+
+                    </div>
+
+
+                    <div class="field">
+
+                        <label for="food_product">
+                            Food / product
+                        </label>
+
+                        <input
+                            id="food_product"
+                            type="text"
+                            required
+                            placeholder="Example: Chicken biryani"
+                        >
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- STEP 3 -->
+
+        <section class="form-section">
+
+            <div class="section-number">03</div>
+
+            <div class="section-content">
+
+                <h2>How did you get the food?</h2>
+
+                <p class="section-help">
+                    Select the option that best describes your order.
+                </p>
+
+
+                <div class="choice-grid">
+
+                    <label class="choice">
+
+                        <input
+                            type="radio"
+                            name="order_channel"
+                            value="DELIVERY_PLATFORM"
+                            required
+                        >
+
+                        <span>
+                            <strong>Online delivery</strong>
+                            <small>Ordered through an app</small>
+                        </span>
+
+                    </label>
+
+
+                    <label class="choice">
+
+                        <input
+                            type="radio"
+                            name="order_channel"
+                            value="DINE_IN"
+                        >
+
+                        <span>
+                            <strong>Dine-in</strong>
+                            <small>Ate at the business</small>
+                        </span>
+
+                    </label>
+
+
+                    <label class="choice">
+
+                        <input
+                            type="radio"
+                            name="order_channel"
+                            value="TAKEAWAY"
+                        >
+
+                        <span>
+                            <strong>Takeaway</strong>
+                            <small>Collected the food</small>
+                        </span>
+
+                    </label>
+
+
+                    <label class="choice">
+
+                        <input
+                            type="radio"
+                            name="order_channel"
+                            value="OTHER"
+                        >
+
+                        <span>
+                            <strong>Other</strong>
+                            <small>Something else</small>
+                        </span>
+
+                    </label>
+
+                </div>
+
+
+                <div
+                    id="platformWrapper"
+                    class="field hidden"
+                >
+
+                    <label for="platform">
+                        Delivery platform
+                    </label>
+
+                    <select id="platform">
+
+                        <option value="">
+                            Select platform
+                        </option>
+
+                        <option value="Swiggy">
+                            Swiggy
+                        </option>
+
+                        <option value="Zomato">
+                            Zomato
+                        </option>
+
+                        <option value="Other">
+                            Other
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="field">
+
+                    <label for="order_date">
+                        Date of order
+                    </label>
+
+                    <input
+                        id="order_date"
+                        type="date"
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- STEP 4 -->
+
+        <section class="form-section">
+
+            <div class="section-number">04</div>
+
+            <div class="section-content">
+
+                <h2>Did anyone become unwell?</h2>
+
+                <p class="section-help">
+                    This information helps determine how the
+                    report should be reviewed.
+                </p>
+
+
+                <div class="field">
+
+                    <label for="people_affected">
+                        People affected
+                    </label>
+
+                    <input
+                        id="people_affected"
+                        type="number"
+                        min="0"
+                        value="0"
+                    >
+
+                </div>
+
+
+                <label class="symptom-label">
+                    Reported symptoms
+                </label>
+
+
+                <div class="symptom-grid">
+
+                    <label>
+                        <input
+                            type="checkbox"
+                            value="vomiting"
+                        >
+                        Vomiting
+                    </label>
+
+                    <label>
+                        <input
+                            type="checkbox"
+                            value="diarrhea"
+                        >
+                        Diarrhea
+                    </label>
+
+                    <label>
+                        <input
+                            type="checkbox"
+                            value="stomach pain"
+                        >
+                        Stomach pain
+                    </label>
+
+                    <label>
+                        <input
+                            type="checkbox"
+                            value="nausea"
+                        >
+                        Nausea
+                    </label>
+
+                    <label>
+                        <input
+                            type="checkbox"
+                            value="fever"
+                        >
+                        Fever
+                    </label>
+
+                    <label>
+                        <input
+                            type="checkbox"
+                            value="other"
+                        >
+                        Other
+                    </label>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- CONFIRMATION -->
+
+        <section class="submit-section">
+
+            <label class="confirmation">
+
+                <input
+                    type="checkbox"
+                    id="confirmation"
+                    required
+                >
+
+                <span>
+                    I confirm that the information provided is
+                    accurate to the best of my knowledge.
+                </span>
+
+            </label>
+
+
+            <div
+                id="formError"
+                class="form-error hidden"
+            ></div>
+
+
+            <button
+                type="submit"
+                id="submitButton"
+                class="btn btn-primary submit-button"
+            >
+                Submit report
+            </button>
+
+        </section>
+
+    </form>
+
+
+    <!-- SUCCESS -->
+
+    <section
+        id="successPanel"
+        class="success-panel hidden"
+    >
+
+        <div class="success-check">
+            ✓
+        </div>
+
+        <p class="eyebrow">
+            REPORT RECEIVED
+        </p>
+
+        <h1>
+            Your report has been submitted.
+        </h1>
+
+        <p>
+            We've recorded your information for review.
+        </p>
+
+
+        <div class="reference-card">
+
+            <span>YOUR REPORT NUMBER</span>
+
+            <strong id="referenceNumber">
+                —
+            </strong>
+
+        </div>
+
+
+        <p class="success-note">
+            Save this number if you want to check the status
+            of your report later.
+        </p>
+
+
+        <a
+            href="track.html"
+            class="btn btn-secondary"
+        >
+            Track my report
+        </a>
+
+    </section>
+
+</main>
+
+
+<footer class="footer">
+
+    <strong>SafeBite</strong>
+
+    <span>
+        Reports are reviewed by authorized personnel.
+    </span>
+
+</footer>
+
+
+<script src="js/api.js"></script>
+<script src="js/report.js"></script>
+
+</body>
+</html>

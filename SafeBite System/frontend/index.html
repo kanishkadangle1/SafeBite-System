@@ -1,0 +1,1761 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SafeBite | Operations</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg: #f5f7f8;
+            --surface: #ffffff;
+            --text: #17201f;
+            --muted: #6b7674;
+            --border: #e1e7e5;
+            --green: #126b52;
+            --green-dark: #0d4939;
+            --green-soft: #e7f3ee;
+            --red: #b42318;
+            --red-soft: #fdeceb;
+            --amber: #a15c00;
+            --amber-soft: #fff3df;
+            --blue: #175cd3;
+            --blue-soft: #eaf2ff;
+            --shadow: 0 8px 30px rgba(18, 34, 30, .06);
+        }
+
+        body {
+            font-family: Inter, ui-sans-serif, system-ui, -apple-system,
+                         BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        button {
+            font: inherit;
+        }
+
+        .app {
+            min-height: 100vh;
+        }
+
+        /* SIDEBAR */
+
+        .sidebar {
+            width: 230px;
+            background: #10221e;
+            color: white;
+            padding: 26px 18px;
+            position: fixed;
+            inset: 0 auto 0 0;
+            z-index: 10;
+        }
+
+        .brand {
+            padding: 0 12px 30px;
+        }
+
+        .brand-name {
+            font-size: 21px;
+            font-weight: 750;
+        }
+
+        .brand-subtitle {
+            color: #9aaca7;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .nav {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .nav-item {
+            padding: 11px 12px;
+            border-radius: 8px;
+            color: #b8c7c3;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            background: #1c4036;
+            color: white;
+        }
+
+        /* MAIN */
+
+        .main {
+            margin-left: 230px;
+            padding: 30px 38px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .eyebrow {
+            color: var(--green);
+            text-transform: uppercase;
+            font-size: 11px;
+            font-weight: 750;
+            letter-spacing: 1.2px;
+            margin-bottom: 7px;
+        }
+
+        h1 {
+            font-size: 29px;
+            letter-spacing: -.8px;
+        }
+
+        .subtitle {
+            color: var(--muted);
+            font-size: 14px;
+            margin-top: 6px;
+        }
+
+        .actions {
+            display: flex;
+            gap: 9px;
+        }
+
+        .button {
+            border: 1px solid var(--border);
+            background: white;
+            padding: 9px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            color: var(--text);
+            font-size: 13px;
+        }
+
+        .button:hover {
+            border-color: #b7c5c1;
+        }
+
+        .button-primary {
+            background: var(--green);
+            color: white;
+            border-color: var(--green);
+        }
+
+        .button-primary:hover {
+            background: var(--green-dark);
+        }
+
+        /* DASHBOARD */
+
+        #dashboardView {
+            display: block;
+        }
+
+        .metrics {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 14px;
+            margin-bottom: 24px;
+        }
+
+        .metric {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 11px;
+            padding: 18px;
+            box-shadow: var(--shadow);
+        }
+
+        .metric-label {
+            color: var(--muted);
+            font-size: 12px;
+            margin-bottom: 10px;
+        }
+
+        .metric-value {
+            font-size: 27px;
+            font-weight: 720;
+        }
+
+        .metric-note {
+            color: var(--muted);
+            font-size: 11px;
+            margin-top: 5px;
+        }
+
+        .danger {
+            color: var(--red);
+        }
+
+        .warning {
+            color: var(--amber);
+        }
+
+        .success {
+            color: var(--green);
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 300px;
+            gap: 20px;
+        }
+
+        .panel {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 19px 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .panel-title {
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .panel-caption {
+            font-size: 12px;
+            color: var(--muted);
+            margin-top: 3px;
+        }
+
+        .table-wrap {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            text-align: left;
+            padding: 12px 20px;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: .6px;
+            color: var(--muted);
+            background: #fafbfb;
+        }
+
+        td {
+            padding: 15px 20px;
+            border-top: 1px solid var(--border);
+            font-size: 13px;
+        }
+
+        tbody tr {
+            cursor: pointer;
+            transition: background .15s;
+        }
+
+        tbody tr:hover {
+            background: #f8faf9;
+        }
+
+        .case-id {
+            color: var(--green);
+            font-weight: 700;
+        }
+
+        .business {
+            font-weight: 650;
+        }
+
+        .small {
+            display: block;
+            color: var(--muted);
+            font-size: 11px;
+            margin-top: 3px;
+        }
+
+        .badge {
+            display: inline-flex;
+            padding: 5px 8px;
+            border-radius: 6px;
+            font-size: 10px;
+            font-weight: 750;
+            letter-spacing: .4px;
+        }
+
+        .badge-high,
+        .badge-breach {
+            color: var(--red);
+            background: var(--red-soft);
+        }
+
+        .badge-medium,
+        .badge-risk {
+            color: var(--amber);
+            background: var(--amber-soft);
+        }
+
+        .badge-normal,
+        .badge-track {
+            color: var(--green);
+            background: var(--green-soft);
+        }
+
+        .empty {
+            padding: 45px 20px;
+            text-align: center;
+            color: var(--muted);
+        }
+
+        .side-section {
+            padding: 20px;
+        }
+
+        .side-title {
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .signal {
+            padding: 13px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .signal-number {
+            font-size: 22px;
+            font-weight: 720;
+        }
+
+        .signal-label {
+            color: var(--muted);
+            font-size: 11px;
+            margin-top: 2px;
+        }
+
+        .system-note {
+            margin-top: 20px;
+            padding: 14px;
+            background: #f5f8f7;
+            border-radius: 8px;
+            color: #53625e;
+            font-size: 11px;
+            line-height: 1.6;
+        }
+
+        /* CASE DETAIL */
+
+        #caseView {
+            display: none;
+        }
+
+        .case-header {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 22px;
+            box-shadow: var(--shadow);
+            margin-bottom: 18px;
+        }
+
+        .case-header-top {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .case-reference {
+            color: var(--green);
+            font-size: 13px;
+            font-weight: 750;
+            margin-bottom: 7px;
+        }
+
+        .case-title {
+            font-size: 24px;
+            letter-spacing: -.5px;
+        }
+
+        .case-description {
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.65;
+            margin-top: 10px;
+            max-width: 850px;
+        }
+
+        .case-badges {
+            display: flex;
+            gap: 7px;
+            flex-wrap: wrap;
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+
+        .detail-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            padding: 20px;
+        }
+
+        .detail-card.full {
+            grid-column: 1 / -1;
+        }
+
+        .detail-title {
+            font-size: 14px;
+            font-weight: 750;
+            margin-bottom: 17px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .info-label {
+            color: var(--muted);
+            font-size: 11px;
+            margin-bottom: 5px;
+        }
+
+        .info-value {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .risk-box {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .risk-score {
+            width: 88px;
+            height: 88px;
+            border-radius: 50%;
+            background: var(--green-soft);
+            color: var(--green);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            flex-shrink: 0;
+        }
+
+        .risk-score strong {
+            font-size: 25px;
+        }
+
+        .risk-score span {
+            font-size: 9px;
+            color: var(--muted);
+        }
+
+        .risk-explanation {
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.65;
+        }
+
+        .tag-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
+        }
+
+        .tag {
+            background: #f0f3f2;
+            color: #42504d;
+            border-radius: 6px;
+            padding: 7px 9px;
+            font-size: 11px;
+        }
+
+        .sla-card {
+            border-left: 4px solid var(--green);
+            background: #f6faf8;
+            padding: 15px 17px;
+            border-radius: 7px;
+        }
+
+        .sla-card.at-risk {
+            border-left-color: var(--amber);
+            background: #fffaf1;
+        }
+
+        .sla-card.breached {
+            border-left-color: var(--red);
+            background: #fff6f5;
+        }
+
+        .sla-main {
+            font-size: 20px;
+            font-weight: 750;
+        }
+
+        .sla-sub {
+            color: var(--muted);
+            font-size: 12px;
+            margin-top: 4px;
+        }
+
+        .loading {
+            color: var(--muted);
+            padding: 40px;
+            text-align: center;
+        }
+
+        @media (max-width: 1100px) {
+            .metrics {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 760px) {
+            .sidebar {
+                position: static;
+                width: 100%;
+            }
+
+            .main {
+                margin-left: 0;
+                padding: 22px 16px;
+            }
+
+            .metrics {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .detail-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .detail-card.full {
+                grid-column: auto;
+            }
+
+            .case-header-top {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="app">
+
+    <aside class="sidebar">
+
+        <div class="brand">
+            <div class="brand-name">SafeBite</div>
+            <div class="brand-subtitle">
+                Food safety operations
+            </div>
+        </div>
+
+        <nav class="nav">
+
+            <div
+                class="nav-item active"
+                onclick="showDashboard()"
+            >
+                Overview
+            </div>
+
+            <div
+                class="nav-item"
+                onclick="showDashboard()"
+            >
+                Complaints
+            </div>
+
+            <div class="nav-item">
+                Risk signals
+            </div>
+
+            <div class="nav-item">
+                Hotspots
+            </div>
+
+        </nav>
+
+    </aside>
+
+
+    <main class="main">
+
+        <!-- ================================================= -->
+        <!-- DASHBOARD -->
+        <!-- ================================================= -->
+
+        <section id="dashboardView">
+
+            <header class="topbar">
+
+                <div>
+                    <div class="eyebrow">
+                        Operations
+                    </div>
+
+                    <h1>
+                        Food safety overview
+                    </h1>
+
+                    <p class="subtitle">
+                        Review incoming reports, risk levels and response timelines.
+                    </p>
+                </div>
+
+                <div class="actions">
+
+                    <button
+                        class="button"
+                        onclick="loadDashboard()"
+                    >
+                        Refresh data
+                    </button>
+
+                </div>
+
+            </header>
+
+
+            <section class="metrics">
+
+                <div class="metric">
+                    <div class="metric-label">Total reports</div>
+                    <div
+                        class="metric-value"
+                        id="totalComplaints"
+                    >—</div>
+                    <div class="metric-note">
+                        All submitted reports
+                    </div>
+                </div>
+
+                <div class="metric">
+                    <div class="metric-label">AI analysed</div>
+                    <div
+                        class="metric-value success"
+                        id="aiAnalysed"
+                    >—</div>
+                    <div class="metric-note">
+                        Risk assessment completed
+                    </div>
+                </div>
+
+                <div class="metric">
+                    <div class="metric-label">High risk</div>
+                    <div
+                        class="metric-value danger"
+                        id="highRisk"
+                    >—</div>
+                    <div class="metric-note">
+                        Requires attention
+                    </div>
+                </div>
+
+                <div class="metric">
+                    <div class="metric-label">SLA at risk</div>
+                    <div
+                        class="metric-value warning"
+                        id="slaRisk"
+                    >—</div>
+                    <div class="metric-note">
+                        Less than 1 hour
+                    </div>
+                </div>
+
+                <div class="metric">
+                    <div class="metric-label">SLA breached</div>
+                    <div
+                        class="metric-value danger"
+                        id="slaBreached"
+                    >—</div>
+                    <div class="metric-note">
+                        Past deadline
+                    </div>
+                </div>
+
+            </section>
+
+
+            <section class="content-grid">
+
+                <div class="panel">
+
+                    <div class="panel-header">
+
+                        <div>
+                            <div class="panel-title">
+                                Recent reports
+                            </div>
+
+                            <div class="panel-caption">
+                                Select a case to review its full assessment
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <div class="table-wrap">
+
+                        <table>
+
+                            <thead>
+                            <tr>
+                                <th>Reference</th>
+                                <th>Business</th>
+                                <th>Risk</th>
+                                <th>People</th>
+                                <th>SLA</th>
+                            </tr>
+                            </thead>
+
+                            <tbody id="casesTable">
+                            <tr>
+                                <td
+                                    colspan="5"
+                                    class="empty"
+                                >
+                                    Loading reports...
+                                </td>
+                            </tr>
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+
+                <aside class="panel">
+
+                    <div class="side-section">
+
+                        <div class="side-title">
+                            Operational signals
+                        </div>
+
+                        <div class="signal">
+                            <div
+                                class="signal-number"
+                                id="signalHigh"
+                            >—</div>
+
+                            <div class="signal-label">
+                                High-risk cases
+                            </div>
+                        </div>
+
+                        <div class="signal">
+                            <div
+                                class="signal-number"
+                                id="signalSla"
+                            >—</div>
+
+                            <div class="signal-label">
+                                SLA attention needed
+                            </div>
+                        </div>
+
+                        <div class="signal">
+                            <div
+                                class="signal-number"
+                                id="signalAnalysed"
+                            >—</div>
+
+                            <div class="signal-label">
+                                Cases assessed by AI
+                            </div>
+                        </div>
+
+                        <div class="system-note">
+                            SafeBite provides AI-assisted risk signals.
+                            Final investigation and enforcement decisions
+                            remain with authorised officers.
+                        </div>
+
+                    </div>
+
+                </aside>
+
+            </section>
+
+        </section>
+
+
+        <!-- ================================================= -->
+        <!-- CASE DETAIL -->
+        <!-- ================================================= -->
+
+        <section id="caseView">
+
+            <header class="topbar">
+
+                <div>
+                    <div class="eyebrow">
+                        Case review
+                    </div>
+
+                    <h1>
+                        Complaint assessment
+                    </h1>
+
+                    <p class="subtitle">
+                        Review the report, AI-assisted assessment and response timeline.
+                    </p>
+                </div>
+
+                <div class="actions">
+
+                    <button
+                        class="button"
+                        onclick="showDashboard()"
+                    >
+                        ← Back to reports
+                    </button>
+
+                </div>
+
+            </header>
+
+
+            <div id="caseContent">
+
+                <div class="loading">
+                    Loading case...
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<script>
+
+const API_BASE = "http://127.0.0.1:8000";
+
+
+/* =========================================================
+   DASHBOARD
+========================================================= */
+
+async function loadDashboard() {
+
+    try {
+
+        const response = await fetch(
+            `${API_BASE}/dashboard/summary`
+        );
+
+        if (!response.ok) {
+            throw new Error("Dashboard request failed");
+        }
+
+        const data = await response.json();
+
+        const dashboard = data.dashboard;
+
+        document.getElementById(
+            "totalComplaints"
+        ).textContent =
+            dashboard.total_complaints;
+
+        document.getElementById(
+            "aiAnalysed"
+        ).textContent =
+            dashboard.ai_analyzed;
+
+        document.getElementById(
+            "highRisk"
+        ).textContent =
+            dashboard.high_risk_cases;
+
+        document.getElementById(
+            "slaRisk"
+        ).textContent =
+            dashboard.sla_at_risk;
+
+        document.getElementById(
+            "slaBreached"
+        ).textContent =
+            dashboard.sla_breached;
+
+        document.getElementById(
+            "signalHigh"
+        ).textContent =
+            dashboard.high_risk_cases;
+
+        document.getElementById(
+            "signalSla"
+        ).textContent =
+            dashboard.sla_at_risk
+            + dashboard.sla_breached;
+
+        document.getElementById(
+            "signalAnalysed"
+        ).textContent =
+            dashboard.ai_analyzed;
+
+        renderCases(
+            data.recent_cases
+        );
+
+    } catch (error) {
+
+        console.error(error);
+
+        document.getElementById(
+            "casesTable"
+        ).innerHTML = `
+            <tr>
+                <td
+                    colspan="5"
+                    class="empty"
+                >
+                    Unable to load dashboard data.
+                </td>
+            </tr>
+        `;
+    }
+}
+
+
+/* =========================================================
+   CASE TABLE
+========================================================= */
+
+function renderCases(cases) {
+
+    const table =
+        document.getElementById(
+            "casesTable"
+        );
+
+    if (!cases || !cases.length) {
+
+        table.innerHTML = `
+            <tr>
+                <td
+                    colspan="5"
+                    class="empty"
+                >
+                    No reports have been submitted yet.
+                </td>
+            </tr>
+        `;
+
+        return;
+    }
+
+
+    table.innerHTML =
+        cases.map(
+            complaint => {
+
+                let priorityClass =
+                    "badge-normal";
+
+                if (
+                    complaint.priority === "HIGH" ||
+                    complaint.priority === "URGENT"
+                ) {
+                    priorityClass =
+                        "badge-high";
+
+                } else if (
+                    complaint.priority === "MEDIUM"
+                ) {
+                    priorityClass =
+                        "badge-medium";
+                }
+
+
+                let slaClass =
+                    "badge-track";
+
+                if (
+                    complaint.sla_status === "BREACHED"
+                ) {
+                    slaClass =
+                        "badge-breach";
+
+                } else if (
+                    complaint.sla_status === "AT_RISK"
+                ) {
+                    slaClass =
+                        "badge-risk";
+                }
+
+
+                const people =
+                    complaint.people_affected ?? 0;
+
+
+                const remaining =
+                    complaint.remaining_hours !== null
+                        ? `${complaint.remaining_hours}h`
+                        : "—";
+
+
+                return `
+                    <tr
+                        onclick="openCase(
+                            '${escapeHtml(
+                                complaint.complaint_number
+                            )}'
+                        )"
+                    >
+
+                        <td>
+
+                            <span class="case-id">
+                                ${escapeHtml(
+                                    complaint.complaint_number
+                                )}
+                            </span>
+
+                            <span class="small">
+                                ${escapeHtml(
+                                    complaint.status
+                                    || "RECEIVED"
+                                )}
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <span class="business">
+                                ${escapeHtml(
+                                    complaint.business_name
+                                    || "Not provided"
+                                )}
+                            </span>
+
+                            <span class="small">
+                                ${escapeHtml(
+                                    complaint.food_product
+                                    || "Food item not specified"
+                                )}
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <span
+                                class="badge ${priorityClass}"
+                            >
+                                ${escapeHtml(
+                                    complaint.priority
+                                    || "NORMAL"
+                                )}
+                            </span>
+
+                            <span class="small">
+                                Risk score:
+                                ${complaint.risk_score ?? "—"}
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            ${people}
+
+                            <span class="small">
+                                affected
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <span
+                                class="badge ${slaClass}"
+                            >
+                                ${escapeHtml(
+                                    complaint.sla_status
+                                    || "NOT SET"
+                                )}
+                            </span>
+
+                            <span class="small">
+                                ${remaining}
+                                remaining
+                            </span>
+
+                        </td>
+
+                    </tr>
+                `;
+            }
+        ).join("");
+}
+
+
+/* =========================================================
+   OPEN CASE
+========================================================= */
+
+async function openCase(reference) {
+
+    document.getElementById(
+        "dashboardView"
+    ).style.display = "none";
+
+    document.getElementById(
+        "caseView"
+    ).style.display = "block";
+
+
+    document.getElementById(
+        "caseContent"
+    ).innerHTML = `
+        <div class="loading">
+            Loading ${escapeHtml(reference)}...
+        </div>
+    `;
+
+
+    try {
+
+        const response = await fetch(
+            `${API_BASE}/complaints/${encodeURIComponent(reference)}`
+        );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Unable to retrieve complaint"
+            );
+
+        }
+
+
+        const complaint =
+            await response.json();
+
+
+        renderCase(
+            complaint
+        );
+
+
+    } catch (error) {
+
+        console.error(error);
+
+        document.getElementById(
+            "caseContent"
+        ).innerHTML = `
+            <div class="panel">
+                <div class="empty">
+                    Unable to load this complaint.
+                </div>
+            </div>
+        `;
+    }
+}
+
+
+/* =========================================================
+   CASE DETAIL UI
+========================================================= */
+
+function renderCase(complaint) {
+
+    const riskScore =
+        complaint.ai_risk_score ?? 0;
+
+
+    const severity =
+        complaint.ai_severity
+        || "Not analysed";
+
+
+    const priority =
+        complaint.priority
+        || "NORMAL";
+
+
+    let priorityClass =
+        "badge-normal";
+
+
+    if (
+        priority === "HIGH" ||
+        priority === "URGENT"
+    ) {
+        priorityClass =
+            "badge-high";
+
+    } else if (
+        priority === "MEDIUM"
+    ) {
+        priorityClass =
+            "badge-medium";
+    }
+
+
+    let symptoms = [];
+
+    let seriousSignals = [];
+
+
+    try {
+
+        symptoms =
+            JSON.parse(
+                complaint.ai_detected_symptoms
+                || "[]"
+            );
+
+    } catch (_) {
+
+        symptoms = [];
+    }
+
+
+    try {
+
+        seriousSignals =
+            JSON.parse(
+                complaint.ai_serious_signals
+                || "[]"
+            );
+
+    } catch (_) {
+
+        seriousSignals = [];
+    }
+
+
+    const severityExplanation =
+        buildRiskExplanation(
+            complaint,
+            symptoms,
+            seriousSignals
+        );
+
+
+    const sla =
+        buildSlaInfo(
+            complaint
+        );
+
+
+    document.getElementById(
+        "caseContent"
+    ).innerHTML = `
+
+        <div class="case-header">
+
+            <div class="case-header-top">
+
+                <div>
+
+                    <div class="case-reference">
+                        ${escapeHtml(
+                            complaint.complaint_number
+                        )}
+                    </div>
+
+                    <div class="case-title">
+                        ${escapeHtml(
+                            complaint.business_name
+                            || "Unnamed business"
+                        )}
+                    </div>
+
+                    <div class="case-description">
+                        ${escapeHtml(
+                            complaint.description
+                            || "No description provided."
+                        )}
+                    </div>
+
+                </div>
+
+
+                <div class="case-badges">
+
+                    <span
+                        class="badge ${priorityClass}"
+                    >
+                        ${escapeHtml(priority)}
+                    </span>
+
+                    <span class="badge badge-normal">
+                        ${escapeHtml(
+                            complaint.status
+                            || "RECEIVED"
+                        )}
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="detail-grid">
+
+
+            <div class="detail-card">
+
+                <div class="detail-title">
+                    Report details
+                </div>
+
+                <div class="info-grid">
+
+                    <div>
+                        <div class="info-label">
+                            Food product
+                        </div>
+
+                        <div class="info-value">
+                            ${escapeHtml(
+                                complaint.food_product
+                                || "Not provided"
+                            )}
+                        </div>
+                    </div>
+
+
+                    <div>
+                        <div class="info-label">
+                            People affected
+                        </div>
+
+                        <div class="info-value">
+                            ${complaint.people_affected ?? 0}
+                        </div>
+                    </div>
+
+
+                    <div>
+                        <div class="info-label">
+                            Order channel
+                        </div>
+
+                        <div class="info-value">
+                            ${escapeHtml(
+                                complaint.order_channel
+                                || "Not provided"
+                            )}
+                        </div>
+                    </div>
+
+
+                    <div>
+                        <div class="info-label">
+                            Platform
+                        </div>
+
+                        <div class="info-value">
+                            ${escapeHtml(
+                                complaint.platform
+                                || "Not provided"
+                            )}
+                        </div>
+                    </div>
+
+
+                    <div>
+                        <div class="info-label">
+                            Order date
+                        </div>
+
+                        <div class="info-value">
+                            ${escapeHtml(
+                                complaint.order_date
+                                || "Not provided"
+                            )}
+                        </div>
+                    </div>
+
+
+                    <div>
+                        <div class="info-label">
+                            Reported symptoms
+                        </div>
+
+                        <div class="info-value">
+                            ${escapeHtml(
+                                complaint.reported_symptoms
+                                || "Not provided"
+                            )}
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="detail-card">
+
+                <div class="detail-title">
+                    AI-assisted risk assessment
+                </div>
+
+                <div class="risk-box">
+
+                    <div class="risk-score">
+
+                        <strong>
+                            ${riskScore}
+                        </strong>
+
+                        <span>
+                            RISK SCORE
+                        </span>
+
+                    </div>
+
+
+                    <div class="risk-explanation">
+
+                        <strong>
+                            ${escapeHtml(severity)}
+                        </strong>
+
+                        <br><br>
+
+                        ${severityExplanation}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="detail-card">
+
+                <div class="detail-title">
+                    Detected symptoms
+                </div>
+
+                <div class="tag-list">
+
+                    ${
+                        symptoms.length
+                        ? symptoms.map(
+                            item =>
+                                `<span class="tag">
+                                    ${escapeHtml(item)}
+                                </span>`
+                        ).join("")
+                        : `<span class="small">
+                            No symptoms detected
+                           </span>`
+                    }
+
+                </div>
+
+            </div>
+
+
+            <div class="detail-card">
+
+                <div class="detail-title">
+                    Serious signals
+                </div>
+
+                <div class="tag-list">
+
+                    ${
+                        seriousSignals.length
+                        ? seriousSignals.map(
+                            item =>
+                                `<span class="tag">
+                                    ${escapeHtml(item)}
+                                </span>`
+                        ).join("")
+                        : `<span class="small">
+                            No serious signals detected
+                           </span>`
+                    }
+
+                </div>
+
+            </div>
+
+
+            <div class="detail-card full">
+
+                <div class="detail-title">
+                    Response timeline
+                </div>
+
+                ${sla}
+
+            </div>
+
+
+            <div class="detail-card full">
+
+                <div class="detail-title">
+                    AI assessment note
+                </div>
+
+                <div class="system-note">
+                    ${escapeHtml(
+                        complaint.ai_analysis_type
+                        || "AI-assisted risk assessment"
+                    )}
+                    <br><br>
+                    This assessment is intended to support
+                    authorised personnel during case review.
+                    It should not replace investigation,
+                    evidence collection or official
+                    enforcement decisions.
+                </div>
+
+            </div>
+
+        </div>
+    `;
+}
+
+
+/* =========================================================
+   SLA
+========================================================= */
+
+function buildSlaInfo(complaint) {
+
+    if (!complaint.sla_deadline) {
+
+        return `
+            <div class="sla-card">
+                <div class="sla-main">
+                    SLA not assigned
+                </div>
+
+                <div class="sla-sub">
+                    This complaint has not been analysed yet.
+                </div>
+            </div>
+        `;
+    }
+
+
+    const deadline =
+        new Date(
+            complaint.sla_deadline
+        );
+
+
+    const now =
+        new Date();
+
+
+    const remainingMs =
+        deadline - now;
+
+
+    const remainingHours =
+        Math.max(
+            0,
+            remainingMs / 3600000
+        );
+
+
+    let status =
+        "ON TRACK";
+
+
+    let className =
+        "";
+
+
+    if (remainingMs <= 0) {
+
+        status =
+            "BREACHED";
+
+        className =
+            "breached";
+
+    } else if (
+        remainingMs <= 3600000
+    ) {
+
+        status =
+            "AT RISK";
+
+        className =
+            "at-risk";
+    }
+
+
+    return `
+        <div class="sla-card ${className}">
+
+            <div class="sla-main">
+                ${status}
+                · ${remainingHours.toFixed(1)}h remaining
+            </div>
+
+            <div class="sla-sub">
+                Response deadline:
+                ${deadline.toLocaleString()}
+            </div>
+
+        </div>
+    `;
+}
+
+
+/* =========================================================
+   RISK EXPLANATION
+========================================================= */
+
+function buildRiskExplanation(
+    complaint,
+    symptoms,
+    seriousSignals
+) {
+
+    const reasons = [];
+
+
+    if (
+        complaint.people_affected &&
+        complaint.people_affected > 1
+    ) {
+
+        reasons.push(
+            `${complaint.people_affected} people reported as affected`
+        );
+
+    }
+
+
+    if (symptoms.length) {
+
+        reasons.push(
+            `${symptoms.length} symptom signal(s) detected`
+        );
+
+    }
+
+
+    if (seriousSignals.length) {
+
+        reasons.push(
+            `${seriousSignals.length} serious signal(s) detected`
+        );
+
+    }
+
+
+    if (!reasons.length) {
+
+        return `
+            The system did not identify additional
+            high-confidence risk signals from the
+            submitted information.
+        `;
+    }
+
+
+    return `
+        The assessment was influenced by:
+        ${reasons.map(
+            item =>
+                `<br>• ${escapeHtml(item)}`
+        ).join("")}
+    `;
+}
+
+
+/* =========================================================
+   NAVIGATION
+========================================================= */
+
+function showDashboard() {
+
+    document.getElementById(
+        "caseView"
+    ).style.display = "none";
+
+    document.getElementById(
+        "dashboardView"
+    ).style.display = "block";
+
+    loadDashboard();
+}
+
+
+/* =========================================================
+   SECURITY
+========================================================= */
+
+function escapeHtml(value) {
+
+    return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+}
+
+
+/* =========================================================
+   START
+========================================================= */
+
+loadDashboard();
+
+</script>
+
+</body>
+</html>

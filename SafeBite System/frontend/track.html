@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Track Report | SafeBite</title>
+
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/public.css">
+</head>
+
+<body>
+
+<header class="header">
+
+    <a href="index.html" class="logo">
+        <span class="logo-mark">S</span>
+
+        <span>
+            <strong>SafeBite</strong>
+            <small>Food safety reporting</small>
+        </span>
+    </a>
+
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="report.html">Report an issue</a>
+        <a href="track.html" class="active">Track report</a>
+    </nav>
+
+</header>
+
+
+<main class="track-container">
+
+    <section class="track-header">
+
+        <p class="eyebrow">REPORT STATUS</p>
+
+        <h1>Track your report.</h1>
+
+        <p>
+            Enter the reference number you received after
+            submitting your food safety report.
+        </p>
+
+    </section>
+
+
+    <section class="track-card">
+
+        <form id="trackForm">
+
+            <label for="complaintId">
+                Report reference number
+            </label>
+
+            <div class="track-input">
+
+                <input
+                    id="complaintId"
+                    type="text"
+                    placeholder="Example: SB-2026-000001"
+                    required
+                >
+
+                <button
+                    type="submit"
+                    class="btn btn-primary"
+                >
+                    Check status
+                </button>
+
+            </div>
+
+            <div
+                id="trackError"
+                class="form-error hidden"
+            ></div>
+
+        </form>
+
+
+        <div
+            id="statusResult"
+            class="status-result hidden"
+        >
+
+            <div class="status-top">
+
+                <div>
+                    <span class="result-label">
+                        REPORT
+                    </span>
+
+                    <strong id="resultNumber">
+                        —
+                    </strong>
+                </div>
+
+                <span
+                    id="statusBadge"
+                    class="status-badge"
+                >
+                    —
+                </span>
+
+            </div>
+
+
+            <div class="status-divider"></div>
+
+
+            <div class="status-grid">
+
+                <div>
+                    <span>Business</span>
+                    <strong id="resultBusiness">—</strong>
+                </div>
+
+                <div>
+                    <span>Food</span>
+                    <strong id="resultFood">—</strong>
+                </div>
+
+                <div>
+                    <span>Order type</span>
+                    <strong id="resultChannel">—</strong>
+                </div>
+
+                <div>
+                    <span>People affected</span>
+                    <strong id="resultPeople">—</strong>
+                </div>
+
+            </div>
+
+
+            <div class="status-message">
+
+                <strong>What happens next?</strong>
+
+                <p id="resultMessage">
+                    Your report is available for review.
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <section class="track-note">
+
+        <strong>Important</strong>
+
+        <p>
+            SafeBite provides reporting and information support.
+            Investigation and enforcement decisions are made by
+            authorized food safety personnel.
+        </p>
+
+    </section>
+
+</main>
+
+
+<footer class="footer">
+
+    <strong>SafeBite</strong>
+
+    <span>
+        Reports are reviewed by authorized personnel.
+    </span>
+
+</footer>
+
+
+<script src="js/api.js"></script>
+<script src="js/track.js"></script>
+
+</body>
+</html>
